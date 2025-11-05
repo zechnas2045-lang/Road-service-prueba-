@@ -1,2 +1,771 @@
 # Road-service-prueba-
 Prueba
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Service Manager</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--secondary);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .metric-card {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            color: #777;
+            font-size: 0.85rem;
+        }
+        
+        .consumption-chart {
+            height: 200px;
+            background: linear-gradient(to top, #3498db, #2c3e50);
+            border-radius: 8px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30px;
+            background-color: var(--warning);
+            border-radius: 4px 4px 0 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Road Service Manager</div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active" data-tab="dashboard">Dashboard</a></li>
+                        <li><a href="#" data-tab="vehicles">Vehículos</a></li>
+                        <li><a href="#" data-tab="fuel">Combustible</a></li>
+                        <li><a href="#" data-tab="maintenance">Mantenimiento</a></li>
+                        <li><a href="#" data-tab="inventory">Inventario</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <h1>Dashboard de Métricas</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Consumo Promedio</div>
+                    <div class="stat-value">8.5 km/L</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Gasto Mensual Combustible</div>
+                    <div class="stat-value">$1,250.00</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Costo por Milla</div>
+                    <div class="stat-value">$0.35</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Millas Este Mes</div>
+                    <div class="stat-value">1,250</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Consumo de Combustible por Unidad</div>
+                </div>
+                <div class="consumption-chart" id="consumptionChart">
+                    <!-- Chart bars will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Unidades con Bajo Rendimiento</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Consumo (km/L)</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>VAN-001</td>
+                                <td>6.2</td>
+                                <td><span style="color: var(--danger);">Crítico</span></td>
+                            </tr>
+                            <tr>
+                                <td>TRUCK-003</td>
+                                <td>7.1</td>
+                                <td><span style="color: var(--warning);">Bajo</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Próximos Mantenimientos</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Unidad</th>
+                                <th>Servicio</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>VAN-002</td>
+                                <td>Cambio de Aceite</td>
+                                <td>15/10/2023</td>
+                            </tr>
+                            <tr>
+                                <td>TRUCK-001</td>
+                                <td>Rotación de Llantas</td>
+                                <td>18/10/2023</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicles Tab -->
+        <div id="vehicles" class="tab-content">
+            <div class="card-header">
+                <div class="card-title">Gestión de Vehículos</div>
+                <button class="btn btn-primary" id="addVehicleBtn">Agregar Vehículo</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mecánico</th>
+                        <th>Modelo</th>
+                        <th>Millas Totales</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="vehiclesTable">
+                    <!-- Vehicle data will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <!-- Add Vehicle Modal (simplified for this example) -->
+            <div id="vehicleModal" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Agregar Nuevo Vehículo</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicleId">ID del Vehículo</label>
+                        <input type="text" id="vehicleId" placeholder="Ej: VAN-001">
+                    </div>
+                    <div class="form-group">
+                        <label for="mechanicName">Nombre del Mecánico</label>
+                        <input type="text" id="mechanicName" placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicleModel">Modelo del Vehículo</label>
+                        <input type="text" id="vehicleModel" placeholder="Ej: Ford Transit 2022">
+                    </div>
+                    <button class="btn btn-success" id="saveVehicleBtn">Guardar</button>
+                    <button class="btn btn-danger" id="cancelVehicleBtn">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fuel Tab -->
+        <div id="fuel" class="tab-content">
+            <div class="card-header">
+                <div class="card-title">Registro de Combustible</div>
+                <button class="btn btn-primary" id="addFuelBtn">Nueva Recarga</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="vehicleSelect">Seleccionar Vehículo</label>
+                <select id="vehicleSelect">
+                    <option value="">-- Seleccione un vehículo --</option>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Vehículo</th>
+                        <th>Combustible (L)</th>
+                        <th>Precio/L</th>
+                        <th>Costo Total</th>
+                        <th>Millas Recorridas</th>
+                        <th>Consumo (km/L)</th>
+                    </tr>
+                </thead>
+                <tbody id="fuelTable">
+                    <!-- Fuel data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Maintenance Tab -->
+        <div id="maintenance" class="tab-content">
+            <div class="card-header">
+                <div class="card-title">Registro de Mantenimiento</div>
+                <button class="btn btn-primary" id="addMaintenanceBtn">Nuevo Mantenimiento</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Vehículo</th>
+                        <th>Tipo de Servicio</th>
+                        <th>Descripción</th>
+                        <th>Costo</th>
+                        <th>Próximo Servicio</th>
+                    </tr>
+                </thead>
+                <tbody id="maintenanceTable">
+                    <!-- Maintenance data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="card-header">
+                <div class="card-title">Inventario por Unidad</div>
+                <button class="btn btn-primary" id="addInventoryBtn">Agregar Item</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="inventoryVehicleSelect">Seleccionar Vehículo</label>
+                <select id="inventoryVehicleSelect">
+                    <option value="">-- Seleccione un vehículo --</option>
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Última Actualización</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTable">
+                    <!-- Inventory data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Road Service Manager &copy; 2023 - Sistema de Gestión para Compañías de Road Service</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data for demonstration
+        const sampleData = {
+            vehicles: [
+                { id: 'VAN-001', mechanic: 'Carlos Rodríguez', model: 'Ford Transit 2021', miles: 12500, status: 'Activo' },
+                { id: 'VAN-002', mechanic: 'María González', model: 'Mercedes Sprinter 2020', miles: 18900, status: 'Activo' },
+                { id: 'TRUCK-001', mechanic: 'Roberto Silva', model: 'Chevrolet Silverado 2019', miles: 24500, status: 'En Mantenimiento' },
+                { id: 'TRUCK-002', mechanic: 'Ana Martínez', model: 'Ford F-150 2022', miles: 8200, status: 'Activo' }
+            ],
+            fuelRecords: [
+                { date: '2023-10-05', vehicle: 'VAN-001', fuel: 45, price: 1.25, total: 56.25, miles: 320, consumption: 7.1 },
+                { date: '2023-10-03', vehicle: 'VAN-002', fuel: 38, price: 1.28, total: 48.64, miles: 310, consumption: 8.2 },
+                { date: '2023-10-01', vehicle: 'TRUCK-001', fuel: 60, price: 1.22, total: 73.20, miles: 380, consumption: 6.3 },
+                { date: '2023-09-28', vehicle: 'TRUCK-002', fuel: 52, price: 1.30, total: 67.60, miles: 410, consumption: 7.9 }
+            ],
+            maintenance: [
+                { date: '2023-09-15', vehicle: 'VAN-001', service: 'Cambio de Aceite', description: 'Cambio de aceite y filtro', cost: 85.00, nextService: '2023-12-15' },
+                { date: '2023-09-10', vehicle: 'TRUCK-001', service: 'Frenos', description: 'Cambio de pastillas de freno', cost: 220.00, nextService: '2024-03-10' },
+                { date: '2023-08-25', vehicle: 'VAN-002', service: 'Alineación', description: 'Alineación y balanceo', cost: 75.00, nextService: '2024-02-25' }
+            ],
+            inventory: [
+                { vehicle: 'VAN-001', item: 'Aceite Motor', quantity: 3, unit: 'Litros', lastUpdate: '2023-10-01', status: 'Disponible' },
+                { vehicle: 'VAN-001', item: 'Filtros Aire', quantity: 2, unit: 'Unidades', lastUpdate: '2023-10-01', status: 'Disponible' },
+                { vehicle: 'VAN-002', item: 'Líquido Frenos', quantity: 1, unit: 'Litros', lastUpdate: '2023-09-28', status: 'Bajo' },
+                { vehicle: 'TRUCK-001', item: 'Bujías', quantity: 6, unit: 'Unidades', lastUpdate: '2023-09-20', status: 'Disponible' },
+                { vehicle: 'TRUCK-002', item: 'Anticongelante', quantity: 4, unit: 'Litros', lastUpdate: '2023-10-05', status: 'Disponible' }
+            ]
+        };
+
+        // Tab navigation
+        document.querySelectorAll('nav a').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('nav a').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // If switching to fuel tab, populate vehicle select
+                if (tabId === 'fuel') {
+                    populateVehicleSelect('vehicleSelect');
+                }
+                
+                // If switching to inventory tab, populate vehicle select
+                if (tabId === 'inventory') {
+                    populateVehicleSelect('inventoryVehicleSelect');
+                }
+            });
+        });
+
+        // Populate vehicles table
+        function populateVehiclesTable() {
+            const tableBody = document.getElementById('vehiclesTable');
+            tableBody.innerHTML = '';
+            
+            sampleData.vehicles.forEach(vehicle => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${vehicle.id}</td>
+                    <td>${vehicle.mechanic}</td>
+                    <td>${vehicle.model}</td>
+                    <td>${vehicle.miles.toLocaleString()}</td>
+                    <td>${vehicle.status}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm">Editar</button>
+                        <button class="btn btn-danger btn-sm">Eliminar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate fuel records table
+        function populateFuelTable() {
+            const tableBody = document.getElementById('fuelTable');
+            tableBody.innerHTML = '';
+            
+            sampleData.fuelRecords.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.vehicle}</td>
+                    <td>${record.fuel}</td>
+                    <td>$${record.price.toFixed(2)}</td>
+                    <td>$${record.total.toFixed(2)}</td>
+                    <td>${record.miles}</td>
+                    <td>${record.consumption.toFixed(1)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate maintenance table
+        function populateMaintenanceTable() {
+            const tableBody = document.getElementById('maintenanceTable');
+            tableBody.innerHTML = '';
+            
+            sampleData.maintenance.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.vehicle}</td>
+                    <td>${record.service}</td>
+                    <td>${record.description}</td>
+                    <td>$${record.cost.toFixed(2)}</td>
+                    <td>${record.nextService}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate inventory table
+        function populateInventoryTable() {
+            const tableBody = document.getElementById('inventoryTable');
+            tableBody.innerHTML = '';
+            
+            sampleData.inventory.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.item}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.unit}</td>
+                    <td>${item.lastUpdate}</td>
+                    <td>${item.status}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm">Editar</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Populate vehicle select dropdown
+        function populateVehicleSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">-- Seleccione un vehículo --</option>';
+            
+            sampleData.vehicles.forEach(vehicle => {
+                const option = document.createElement('option');
+                option.value = vehicle.id;
+                option.textContent = `${vehicle.id} - ${vehicle.mechanic}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Create consumption chart
+        function createConsumptionChart() {
+            const chart = document.getElementById('consumptionChart');
+            chart.innerHTML = '';
+            
+            // Get unique vehicles from fuel records
+            const vehicles = [...new Set(sampleData.fuelRecords.map(record => record.vehicle))];
+            
+            // Calculate average consumption for each vehicle
+            const consumptions = vehicles.map(vehicle => {
+                const vehicleRecords = sampleData.fuelRecords.filter(record => record.vehicle === vehicle);
+                const avgConsumption = vehicleRecords.reduce((sum, record) => sum + record.consumption, 0) / vehicleRecords.length;
+                return avgConsumption;
+            });
+            
+            // Find max consumption for scaling
+            const maxConsumption = Math.max(...consumptions);
+            
+            // Create bars
+            vehicles.forEach((vehicle, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${(consumptions[index] / maxConsumption) * 100}%`;
+                bar.style.left = `${(index / vehicles.length) * 100}%`;
+                bar.style.width = `${90 / vehicles.length}%`;
+                bar.title = `${vehicle}: ${consumptions[index].toFixed(1)} km/L`;
+                chart.appendChild(bar);
+            });
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            populateVehiclesTable();
+            populateFuelTable();
+            populateMaintenanceTable();
+            populateInventoryTable();
+            createConsumptionChart();
+            
+            // Add event listeners for buttons
+            document.getElementById('addVehicleBtn').addEventListener('click', function() {
+                alert('Funcionalidad para agregar vehículo - En una aplicación real, se abriría un formulario modal');
+            });
+            
+            document.getElementById('addFuelBtn').addEventListener('click', function() {
+                alert('Funcionalidad para agregar registro de combustible - En una aplicación real, se abriría un formulario modal');
+            });
+            
+            document.getElementById('addMaintenanceBtn').addEventListener('click', function() {
+                alert('Funcionalidad para agregar registro de mantenimiento - En una aplicación real, se abriría un formulario modal');
+            });
+            
+            document.getElementById('addInventoryBtn').addEventListener('click', function() {
+                alert('Funcionalidad para agregar item al inventario - En una aplicación real, se abriría un formulario modal');
+            });
+            
+            // Vehicle select change events
+            document.getElementById('vehicleSelect').addEventListener('change', function() {
+                // In a real app, this would filter the fuel records table
+                if (this.value) {
+                    alert(`Mostrando registros de combustible para: ${this.value}`);
+                }
+            });
+            
+            document.getElementById('inventoryVehicleSelect').addEventListener('change', function() {
+                // In a real app, this would filter the inventory table
+                if (this.value) {
+                    alert(`Mostrando inventario para: ${this.value}`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
